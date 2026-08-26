@@ -36,6 +36,11 @@ import { RelatorioRecebimento } from '@/pages/cavacoAparas/RelatorioRecebimento'
 
 import { ClassificarNotas } from '@/pages/compras/ClassificarNotas'
 
+import { AlteracaoProdutos } from '@/pages/desenvolvimento/AlteracaoProdutos'
+import { AprovacaoComercialSpd } from '@/pages/desenvolvimento/AprovacaoComercialSpd'
+import { LotePiloto } from '@/pages/desenvolvimento/LotePiloto'
+import { SolicitacaoSpd } from '@/pages/desenvolvimento/SolicitacaoSpd'
+
 import { AlterarRisco } from '@/pages/financeiro/AlterarRisco'
 import { CadastroCanhoto } from '@/pages/financeiro/CadastroCanhoto'
 import { SolicitarAumentoCredito } from '@/pages/financeiro/SolicitarAumentoCredito'
@@ -44,6 +49,14 @@ import { ValidadoresCredito } from '@/pages/financeiro/ValidadoresCredito'
 import { ChecklistTransporte } from '@/pages/expedicao/ChecklistTransporte'
 import { SimuladorCargas } from '@/pages/expedicao/SimuladorCargas'
 import { AlterarSenha } from '@/pages/utilitarios/AlterarSenha'
+
+import { FichaQm } from '@/pages/sgq/FichaQm'
+import { FncBrasil } from '@/pages/sgq/FncBrasil'
+
+import { SolicitacoesCredito } from '@/pages/validacoes/SolicitacoesCredito'
+import { ValidacaoPapel } from '@/pages/validacoes/ValidacaoPapel'
+import { ValidarPedido } from '@/pages/validacoes/ValidarPedido'
+import { ValidarPedidoBrasil } from '@/pages/validacoes/ValidarPedidoBrasil'
 
 export function App() {
   return (
@@ -90,6 +103,12 @@ export function App() {
                 {/* Compras */}
                 <Route path="/compras/classificar-notas" element={<ClassificarNotas />} />
 
+                {/* Desenvolvimento */}
+                <Route path="/desenvolvimento/alteracao-produtos" element={<AlteracaoProdutos />} />
+                <Route path="/desenvolvimento/aprovacao-comercial-spd" element={<AprovacaoComercialSpd />} />
+                <Route path="/desenvolvimento/lote-piloto-v2" element={<LotePiloto />} />
+                <Route path="/desenvolvimento/solicitacao-spd-v2" element={<SolicitacaoSpd />} />
+
                 {/* Financeiro */}
                 <Route path="/financeiro/alterar-risco" element={<AlterarRisco />} />
                 <Route path="/financeiro/cadastro-canhoto" element={<CadastroCanhoto />} />
@@ -100,6 +119,16 @@ export function App() {
                 {/* Expedição */}
                 <Route path="/expedicao/checklist-transporte" element={<ChecklistTransporte />} />
                 <Route path="/expedicao/simulador-cargas" element={<SimuladorCargas />} />
+
+                {/* SGQ */}
+                <Route path="/sgq/fnc-brasil" element={<FncBrasil />} />
+                <Route path="/sgq/ficha-qm" element={<FichaQm />} />
+
+                {/* Validações */}
+                <Route path="/validacoes/papel" element={<ValidacaoPapel />} />
+                <Route path="/validacoes/solicitacoes-credito" element={<SolicitacoesCredito />} />
+                <Route path="/validacoes/validar-pedido" element={<ValidarPedido />} />
+                <Route path="/validacoes/validar-pedido-brasil" element={<ValidarPedidoBrasil />} />
 
                 {/* Utilitários */}
                 <Route path="/utilitarios/alterar-senha" element={<AlterarSenha />} />

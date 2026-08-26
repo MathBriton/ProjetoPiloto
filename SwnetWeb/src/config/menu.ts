@@ -268,25 +268,30 @@ export const ITENS_MENU: EntradaMenu[] = [
     rotulo: 'Desenvolvimento',
     icone: Package,
     filhos: [
-      pendente(
-        'Alteração de Produtos',
-        '/desenvolvimento/alteracao-produtos',
-        Wrench,
-        'Desenvolvimento/Alteracao-De-Produtos'
-      ),
-      pendente(
-        'Aprovação Comercial SPD',
-        '/desenvolvimento/aprovacao-comercial-spd',
-        ClipboardCheck,
-        'Desenvolvimento/Aprovacao-Comercial-SPD'
-      ),
-      pendente('Lote Piloto V2', '/desenvolvimento/lote-piloto-v2', Boxes, 'Desenvolvimento/Lote-Piloto-V2'),
-      pendente(
-        'Solicitação de SPD V2',
-        '/desenvolvimento/solicitacao-spd-v2',
-        ClipboardList,
-        'Desenvolvimento/Solicitacao-De-SPD-V2'
-      )
+      {
+        rotulo: 'Alteração de Produtos',
+        caminho: '/desenvolvimento/alteracao-produtos',
+        icone: Wrench,
+        origem: 'Desenvolvimento/Alteracao-De-Produtos'
+      },
+      {
+        rotulo: 'Aprovação Comercial SPD',
+        caminho: '/desenvolvimento/aprovacao-comercial-spd',
+        icone: ClipboardCheck,
+        origem: 'Desenvolvimento/Aprovacao-Comercial-SPD'
+      },
+      {
+        rotulo: 'Lote Piloto V2',
+        caminho: '/desenvolvimento/lote-piloto-v2',
+        icone: Boxes,
+        origem: 'Desenvolvimento/Lote-Piloto-V2'
+      },
+      {
+        rotulo: 'Solicitação de SPD V2',
+        caminho: '/desenvolvimento/solicitacao-spd-v2',
+        icone: ClipboardList,
+        origem: 'Desenvolvimento/Solicitacao-De-SPD-V2'
+      }
     ]
   },
 
@@ -397,8 +402,8 @@ export const ITENS_MENU: EntradaMenu[] = [
     rotulo: 'SGQ',
     icone: ClipboardCheck,
     filhos: [
-      pendente('FNC Brasil', '/sgq/fnc-brasil', ClipboardList, 'SGQ/FNC-Brasil'),
-      pendente('Ficha de QM', '/sgq/ficha-qm', Files, 'SGQ/Ficha-De-QM')
+      { rotulo: 'FNC Brasil', caminho: '/sgq/fnc-brasil', icone: ClipboardList, origem: 'SGQ/FNC-Brasil' },
+      { rotulo: 'Ficha de QM', caminho: '/sgq/ficha-qm', icone: Files, origem: 'SGQ/Ficha-De-QM' }
     ]
   },
 
@@ -419,20 +424,25 @@ export const ITENS_MENU: EntradaMenu[] = [
     rotulo: 'Validações',
     icone: ClipboardCheck,
     filhos: [
-      pendente('Papel', '/validacoes/papel', Files, 'Validacoes/Papel'),
-      pendente(
-        'Solicitações de Crédito',
-        '/validacoes/solicitacoes-credito',
-        Coins,
-        'Validacoes/Solicitacoes-De-Credito'
-      ),
-      pendente('Validar Pedido', '/validacoes/validar-pedido', ClipboardCheck, 'Validacoes/Validar-Pedido'),
-      pendente(
-        'Validar Pedido Brasil',
-        '/validacoes/validar-pedido-brasil',
-        ClipboardCheck,
-        'Validacoes/Validar-Pedido-Brasil'
-      )
+      { rotulo: 'Papel', caminho: '/validacoes/papel', icone: Files, origem: 'Validacoes/Papel' },
+      {
+        rotulo: 'Solicitações de Crédito',
+        caminho: '/validacoes/solicitacoes-credito',
+        icone: Coins,
+        origem: 'Validacoes/Solicitacoes-De-Credito'
+      },
+      {
+        rotulo: 'Validar Pedido',
+        caminho: '/validacoes/validar-pedido',
+        icone: ClipboardCheck,
+        origem: 'Validacoes/Validar-Pedido'
+      },
+      {
+        rotulo: 'Validar Pedido Brasil',
+        caminho: '/validacoes/validar-pedido-brasil',
+        icone: ClipboardCheck,
+        origem: 'Validacoes/Validar-Pedido-Brasil'
+      }
     ]
   },
 

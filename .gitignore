@@ -7,6 +7,7 @@ src/**/obj/
 SwnetWeb/node_modules/
 SwnetWeb/dist/
 SwnetWeb/.vite/
+SwnetWeb/tsconfig.tsbuildinfo
 
 # Editor / OS
 .vs/
