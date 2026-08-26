@@ -1,0 +1,15 @@
+# .NET
+src/**/bin/
+src/**/obj/
+*.user
+
+# Node / Vite
+SwnetWeb/node_modules/
+SwnetWeb/dist/
+SwnetWeb/.vite/
+
+# Editor / OS
+.vs/
+.vscode/
+.idea/
+.DS_Store

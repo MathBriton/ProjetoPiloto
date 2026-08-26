@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SwNet.Api</RootNamespace>
+    <UserSecretsId>swnet-api-secrets</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SwNet.Aplicacao\SwNet.Aplicacao.csproj" />
+    <ProjectReference Include="..\SwNet.Dominio\SwNet.Dominio.csproj" />
+    <ProjectReference Include="..\SwNet.Infraestrutura\SwNet.Infraestrutura.csproj" />
+  </ItemGroup>
+
+</Project>

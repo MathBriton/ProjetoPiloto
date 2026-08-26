@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Dark mode ativado por classe .dark na <html>, controlado pelo ThemeContext */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Identidade visual SWnet: branco + azul corporativo */
+  --color-swnet-50: #eff6ff;
+  --color-swnet-100: #dbeafe;
+  --color-swnet-200: #bfdbfe;
+  --color-swnet-300: #93c5fd;
+  --color-swnet-400: #60a5fa;
+  --color-swnet-500: #3b82f6;
+  --color-swnet-600: #2563eb;
+  --color-swnet-700: #1d4ed8;
+  --color-swnet-800: #1e40af;
+  --color-swnet-900: #1e3a8a;
+  --color-swnet-950: #172554;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply antialiased text-slate-800 dark:text-slate-100;
+}
+
+/* Scrollbar discreta para a sidebar */
+.scrollbar-fina::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-fina::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+}
