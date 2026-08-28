@@ -3,10 +3,8 @@ import { AuthProvider } from '@/context/AuthContext'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { AppShell } from '@/components/layout/AppShell'
-import { ITENS_PENDENTES } from '@/config/menu'
 import { Login } from '@/pages/Login'
 import { Home } from '@/pages/Home'
-import { EmConstrucao } from '@/pages/EmConstrucao'
 import { Relatorios } from '@/pages/Relatorios'
 
 import { AcessosUsuarios } from '@/pages/administrador/AcessosUsuarios'
@@ -36,6 +34,11 @@ import { RelatorioRecebimento } from '@/pages/cavacoAparas/RelatorioRecebimento'
 
 import { ClassificarNotas } from '@/pages/compras/ClassificarNotas'
 
+import { AlterarDadosCliente } from '@/pages/cliente/AlterarDadosCliente'
+import { AlterarStatusCliente } from '@/pages/cliente/AlterarStatusCliente'
+import { CadastroUnificado } from '@/pages/cliente/CadastroUnificado'
+import { TransferenciaExtensaoCliente } from '@/pages/cliente/TransferenciaExtensaoCliente'
+
 import { AlteracaoProdutos } from '@/pages/desenvolvimento/AlteracaoProdutos'
 import { AprovacaoComercialSpd } from '@/pages/desenvolvimento/AprovacaoComercialSpd'
 import { LotePiloto } from '@/pages/desenvolvimento/LotePiloto'
@@ -52,6 +55,22 @@ import { AlterarSenha } from '@/pages/utilitarios/AlterarSenha'
 
 import { FichaQm } from '@/pages/sgq/FichaQm'
 import { FncBrasil } from '@/pages/sgq/FncBrasil'
+
+import { AlterarPedidosBrasil } from '@/pages/pedidos/AlterarPedidosBrasil'
+import { AlterarPedidosPiraUbe } from '@/pages/pedidos/AlterarPedidosPiraUbe'
+import { EntregaFimDeSemana } from '@/pages/pedidos/EntregaFimDeSemana'
+import { InclusaoObsNf } from '@/pages/pedidos/InclusaoObsNf'
+import { OrcamentoBrasil } from '@/pages/pedidos/OrcamentoBrasil'
+import { ParametrosPedidos } from '@/pages/pedidos/ParametrosPedidos'
+import { PedidosBrasil } from '@/pages/pedidos/PedidosBrasil'
+import { PedidosDigitadosBrasil } from '@/pages/pedidos/PedidosDigitadosBrasil'
+import { PedidosDigitadosPiraUbe } from '@/pages/pedidos/PedidosDigitadosPiraUbe'
+import { PedidosPiraUbe } from '@/pages/pedidos/PedidosPiraUbe'
+
+import { AtendentesRh, CategoriasChamado, DepartamentosChamado, PrioridadesChamado } from '@/pages/rh/CadastrosRh'
+import { FilaChamadosRh, MeusChamadosRh } from '@/pages/rh/ChamadosRh'
+import { ImportarAdp } from '@/pages/rh/ImportarAdp'
+import { NovoChamadoRh } from '@/pages/rh/NovoChamadoRh'
 
 import { SolicitacoesCredito } from '@/pages/validacoes/SolicitacoesCredito'
 import { ValidacaoPapel } from '@/pages/validacoes/ValidacaoPapel'
@@ -103,6 +122,12 @@ export function App() {
                 {/* Compras */}
                 <Route path="/compras/classificar-notas" element={<ClassificarNotas />} />
 
+                {/* Cliente */}
+                <Route path="/cliente/alterar-dados" element={<AlterarDadosCliente />} />
+                <Route path="/cliente/alterar-status" element={<AlterarStatusCliente />} />
+                <Route path="/cliente/cadastro-unificado-v2" element={<CadastroUnificado />} />
+                <Route path="/cliente/transferencia-extensao" element={<TransferenciaExtensaoCliente />} />
+
                 {/* Desenvolvimento */}
                 <Route path="/desenvolvimento/alteracao-produtos" element={<AlteracaoProdutos />} />
                 <Route path="/desenvolvimento/aprovacao-comercial-spd" element={<AprovacaoComercialSpd />} />
@@ -120,6 +145,28 @@ export function App() {
                 <Route path="/expedicao/checklist-transporte" element={<ChecklistTransporte />} />
                 <Route path="/expedicao/simulador-cargas" element={<SimuladorCargas />} />
 
+                {/* Pedidos */}
+                <Route path="/pedidos/alterar-brasil" element={<AlterarPedidosBrasil />} />
+                <Route path="/pedidos/alterar-piraube" element={<AlterarPedidosPiraUbe />} />
+                <Route path="/pedidos/entrega-fim-de-semana" element={<EntregaFimDeSemana />} />
+                <Route path="/pedidos/inclusao-obs-nf" element={<InclusaoObsNf />} />
+                <Route path="/pedidos/orcamento-brasil" element={<OrcamentoBrasil />} />
+                <Route path="/pedidos/parametros" element={<ParametrosPedidos />} />
+                <Route path="/pedidos/brasil-v2" element={<PedidosBrasil />} />
+                <Route path="/pedidos/digitados-brasil" element={<PedidosDigitadosBrasil />} />
+                <Route path="/pedidos/digitados-piraube" element={<PedidosDigitadosPiraUbe />} />
+                <Route path="/pedidos/piraube" element={<PedidosPiraUbe />} />
+
+                {/* RH */}
+                <Route path="/rh/atendentes" element={<AtendentesRh />} />
+                <Route path="/rh/categorias-chamado" element={<CategoriasChamado />} />
+                <Route path="/rh/chamados" element={<FilaChamadosRh />} />
+                <Route path="/rh/departamentos-chamado" element={<DepartamentosChamado />} />
+                <Route path="/rh/importar-adp" element={<ImportarAdp />} />
+                <Route path="/rh/meus-chamados" element={<MeusChamadosRh />} />
+                <Route path="/rh/novo-chamado" element={<NovoChamadoRh />} />
+                <Route path="/rh/prioridades-chamado" element={<PrioridadesChamado />} />
+
                 {/* SGQ */}
                 <Route path="/sgq/fnc-brasil" element={<FncBrasil />} />
                 <Route path="/sgq/ficha-qm" element={<FichaQm />} />
@@ -133,13 +180,6 @@ export function App() {
                 {/* Utilitários */}
                 <Route path="/utilitarios/alterar-senha" element={<AlterarSenha />} />
 
-                {/*
-                  Menus cujo fonte ASP ainda não veio no material de refatoração:
-                  a rota existe e abre o aviso de pendência, sem inventar a tela.
-                */}
-                {ITENS_PENDENTES.map((item) => (
-                  <Route key={item.caminho} path={item.caminho} element={<EmConstrucao />} />
-                ))}
 
                 <Route path="/relatorios" element={<Relatorios />} />
               </Route>

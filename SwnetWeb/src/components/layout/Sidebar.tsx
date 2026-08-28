@@ -125,16 +125,7 @@ export function Sidebar({ expandida, aoAlternar }: SidebarProps) {
                         className={({ isActive }) => classesItem(isActive)}
                       >
                         <Icone size={18} className="shrink-0" />
-                        <span className="flex-1 truncate">{filho.rotulo}</span>
-                        {filho.pendente && (
-                          <span
-                            title="Tela ainda não refatorada"
-                            className="shrink-0 rounded-full bg-amber-100 px-1.5 text-[10px] font-semibold
-                              text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
-                          >
-                            !
-                          </span>
-                        )}
+                        <span className="truncate">{filho.rotulo}</span>
                       </NavLink>
                     )
                   })}

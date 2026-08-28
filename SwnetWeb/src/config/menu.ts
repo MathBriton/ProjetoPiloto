@@ -43,8 +43,8 @@ import {
  * em um lugar só. Cada grupo espelha uma pasta de
  * `Projetos-A-Refatorar/Menu-Serviços-Sidebar` e cada item, uma subpasta.
  *
- * `pendente: true` marca as telas ainda não refatoradas — a rota existe e
- * abre um aviso de pendência apontando a pasta de origem.
+ * Todas as 61 telas do material legado estão refatoradas; o campo
+ * `origem` amarra cada item à pasta de onde veio.
  */
 
 export interface ItemMenu {
@@ -52,7 +52,6 @@ export interface ItemMenu {
   caminho: string
   icone: LucideIcon
   permissaoNecessaria?: string
-  pendente?: boolean
   /** Pasta de origem no material legado, para rastreabilidade */
   origem?: string
 }
@@ -67,11 +66,6 @@ export type EntradaMenu = ItemMenu | GrupoMenu
 
 export function ehGrupo(entrada: EntradaMenu): entrada is GrupoMenu {
   return 'filhos' in entrada
-}
-
-/** Atalho para declarar as telas ainda não refatoradas */
-function pendente(rotulo: string, caminho: string, icone: LucideIcon, origem: string): ItemMenu {
-  return { rotulo, caminho, icone, pendente: true, origem }
 }
 
 export const ITENS_MENU: EntradaMenu[] = [
@@ -239,15 +233,30 @@ export const ITENS_MENU: EntradaMenu[] = [
     rotulo: 'Cliente',
     icone: Contact,
     filhos: [
-      pendente('Alterar Dados do Cliente', '/cliente/alterar-dados', UserCog, 'Cliente/Alterar-Dados-Do-Cliente'),
-      pendente('Alterar Status do Cliente', '/cliente/alterar-status', Power, 'Cliente/Alterar-Status-Do-Cliente'),
-      pendente('Cadastro Unificado V2', '/cliente/cadastro-unificado-v2', Files, 'Cliente/Cadastro-Unificado-V2'),
-      pendente(
-        'Transferência / Extensão',
-        '/cliente/transferencia-extensao',
-        Truck,
-        'Cliente/Transferencia-Extensao-De-Cliente'
-      )
+      {
+        rotulo: 'Alterar Dados do Cliente',
+        caminho: '/cliente/alterar-dados',
+        icone: UserCog,
+        origem: 'Cliente/Alterar-Dados-Do-Cliente'
+      },
+      {
+        rotulo: 'Alterar Status do Cliente',
+        caminho: '/cliente/alterar-status',
+        icone: Power,
+        origem: 'Cliente/Alterar-Status-Do-Cliente'
+      },
+      {
+        rotulo: 'Cadastro Unificado V2',
+        caminho: '/cliente/cadastro-unificado-v2',
+        icone: Files,
+        origem: 'Cliente/Cadastro-Unificado-V2'
+      },
+      {
+        rotulo: 'Transferência / Extensão',
+        caminho: '/cliente/transferencia-extensao',
+        icone: Truck,
+        origem: 'Cliente/Transferencia-Extensao-De-Cliente'
+      }
     ]
   },
 
@@ -355,31 +364,31 @@ export const ITENS_MENU: EntradaMenu[] = [
     rotulo: 'Pedidos',
     icone: ClipboardList,
     filhos: [
-      pendente('Alterar Pedidos Brasil', '/pedidos/alterar-brasil', UserCog, 'Pedidos/Alterar-Pedidos-Brasil'),
-      pendente('Alterar Pedidos PiraUbe', '/pedidos/alterar-piraube', UserCog, 'Pedidos/Alterar-Pedidos-PiraUbe'),
-      pendente(
-        'Entrega no Fim de Semana',
-        '/pedidos/entrega-fim-de-semana',
-        Truck,
-        'Pedidos/Definir-Entrega-No-Fim-De-Semana'
-      ),
-      pendente('Inclusão OBS NF', '/pedidos/inclusao-obs-nf', Files, 'Pedidos/Inclusao-OBS-NF'),
-      pendente('Orçamento Brasil', '/pedidos/orcamento-brasil', Coins, 'Pedidos/Orçamento-Brasil'),
-      pendente('Parâmetros Pedidos', '/pedidos/parametros', Settings2, 'Pedidos/Parametros-Pedidos'),
-      pendente('Pedidos Brasil V2', '/pedidos/brasil-v2', ClipboardList, 'Pedidos/Pedidos-Brasil-v2'),
-      pendente(
-        'Pedidos Digitados Brasil',
-        '/pedidos/digitados-brasil',
-        ClipboardList,
-        'Pedidos/Pedidos-Digitados-Brasil'
-      ),
-      pendente(
-        'Pedidos Digitados PiraUbe',
-        '/pedidos/digitados-piraube',
-        ClipboardList,
-        'Pedidos/Pedidos-Digitados-PiraUbe'
-      ),
-      pendente('Pedidos PiraUbe', '/pedidos/piraube', ClipboardList, 'Pedidos/PedidosPiraUbe')
+      { rotulo: 'Alterar Pedidos Brasil', caminho: '/pedidos/alterar-brasil', icone: UserCog, origem: 'Pedidos/Alterar-Pedidos-Brasil' },
+      { rotulo: 'Alterar Pedidos PiraUbe', caminho: '/pedidos/alterar-piraube', icone: UserCog, origem: 'Pedidos/Alterar-Pedidos-PiraUbe' },
+      {
+        rotulo: 'Entrega no Fim de Semana',
+        caminho: '/pedidos/entrega-fim-de-semana',
+        icone: Truck,
+        origem: 'Pedidos/Definir-Entrega-No-Fim-De-Semana'
+      },
+      { rotulo: 'Inclusão OBS NF', caminho: '/pedidos/inclusao-obs-nf', icone: Files, origem: 'Pedidos/Inclusao-OBS-NF' },
+      { rotulo: 'Orçamento Brasil', caminho: '/pedidos/orcamento-brasil', icone: Coins, origem: 'Pedidos/Orçamento-Brasil' },
+      { rotulo: 'Parâmetros Pedidos', caminho: '/pedidos/parametros', icone: Settings2, origem: 'Pedidos/Parametros-Pedidos' },
+      { rotulo: 'Pedidos Brasil V2', caminho: '/pedidos/brasil-v2', icone: ClipboardList, origem: 'Pedidos/Pedidos-Brasil-v2' },
+      {
+        rotulo: 'Pedidos Digitados Brasil',
+        caminho: '/pedidos/digitados-brasil',
+        icone: ClipboardList,
+        origem: 'Pedidos/Pedidos-Digitados-Brasil'
+      },
+      {
+        rotulo: 'Pedidos Digitados PiraUbe',
+        caminho: '/pedidos/digitados-piraube',
+        icone: ClipboardList,
+        origem: 'Pedidos/Pedidos-Digitados-PiraUbe'
+      },
+      { rotulo: 'Pedidos PiraUbe', caminho: '/pedidos/piraube', icone: ClipboardList, origem: 'Pedidos/PedidosPiraUbe' }
     ]
   },
 
@@ -387,14 +396,39 @@ export const ITENS_MENU: EntradaMenu[] = [
     rotulo: 'RH',
     icone: Headset,
     filhos: [
-      pendente('Atendentes RH', '/rh/atendentes', Users, 'RH/Cadastro-Atendentes-RH'),
-      pendente('Categorias de Chamado', '/rh/categorias-chamado', ListTree, 'RH/Categorias-De-Chamado'),
-      pendente('Chamados RH', '/rh/chamados', Headset, 'RH/Chamados-RH'),
-      pendente('Departamentos de Chamado', '/rh/departamentos-chamado', Building2, 'RH/Departamentos-De-Chamado-RH'),
-      pendente('Importar do ADP', '/rh/importar-adp', FileSpreadsheet, 'RH/Importar-Do-ADP'),
-      pendente('Meus Chamados RH', '/rh/meus-chamados', ClipboardList, 'RH/Meus-Chamados-RH'),
-      pendente('Novo Chamado RH', '/rh/novo-chamado', UserPlus, 'RH/Novo-Chamado-RH'),
-      pendente('Prioridades de Chamado', '/rh/prioridades-chamado', Sliders, 'RH/Prioridades-De-Chamado-RH')
+      { rotulo: 'Atendentes RH', caminho: '/rh/atendentes', icone: Users, origem: 'RH/Cadastro-Atendentes-RH' },
+      {
+        rotulo: 'Categorias de Chamado',
+        caminho: '/rh/categorias-chamado',
+        icone: ListTree,
+        origem: 'RH/Categorias-De-Chamado'
+      },
+      { rotulo: 'Chamados RH', caminho: '/rh/chamados', icone: Headset, origem: 'RH/Chamados-RH' },
+      {
+        rotulo: 'Departamentos de Chamado',
+        caminho: '/rh/departamentos-chamado',
+        icone: Building2,
+        origem: 'RH/Departamentos-De-Chamado-RH'
+      },
+      {
+        rotulo: 'Importar do ADP',
+        caminho: '/rh/importar-adp',
+        icone: FileSpreadsheet,
+        origem: 'RH/Importar-Do-ADP'
+      },
+      {
+        rotulo: 'Meus Chamados RH',
+        caminho: '/rh/meus-chamados',
+        icone: ClipboardList,
+        origem: 'RH/Meus-Chamados-RH'
+      },
+      { rotulo: 'Novo Chamado RH', caminho: '/rh/novo-chamado', icone: UserPlus, origem: 'RH/Novo-Chamado-RH' },
+      {
+        rotulo: 'Prioridades de Chamado',
+        caminho: '/rh/prioridades-chamado',
+        icone: Sliders,
+        origem: 'RH/Prioridades-De-Chamado-RH'
+      }
     ]
   },
 
@@ -453,6 +487,3 @@ export const ITENS_MENU: EntradaMenu[] = [
 export const ITENS_PLANOS: ItemMenu[] = ITENS_MENU.flatMap((entrada) =>
   ehGrupo(entrada) ? entrada.filhos : [entrada]
 )
-
-/** Só as telas ainda sem fonte ASP, que abrem o aviso de pendência */
-export const ITENS_PENDENTES = ITENS_PLANOS.filter((item) => item.pendente)
