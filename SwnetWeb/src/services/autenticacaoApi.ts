@@ -1,4 +1,4 @@
-import { apiClient } from './apiClient'
+import { apiClient, CHAVE_REFRESH_TOKEN, limparTokens } from './apiClient'
 import type { LoginRetorno } from '@/types'
 
 /**
@@ -64,4 +64,13 @@ export async function login(loginDigitado: string, senha: string): Promise<Login
   }
 
   return apiClient.post<LoginRetorno>('/auth/login', { login: loginDigitado, senha })
+}
+
+/** Revoga o refresh token no backend (best effort) e limpa os tokens locais. */
+export async function logout(): Promise<void> {
+  const refreshToken = localStorage.getItem(CHAVE_REFRESH_TOKEN)
+  limparTokens()
+  if (USAR_MOCK || !refreshToken) return
+
+  await apiClient.post('/auth/logout', { refreshToken }).catch(() => undefined)
 }

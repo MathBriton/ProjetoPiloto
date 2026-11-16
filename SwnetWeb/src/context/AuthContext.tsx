@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import type { UsuarioLogado } from '@/types'
-import { login as loginApi } from '@/services/autenticacaoApi'
+import { login as loginApi, logout as logoutApi } from '@/services/autenticacaoApi'
+import { salvarTokens, limparTokens, EVENTO_SESSAO_EXPIRADA } from '@/services/apiClient'
 
 interface AuthContextValor {
   usuario: UsuarioLogado | null
@@ -33,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { sucesso: false, mensagemErro: resultado.mensagemErro ?? 'Falha ao autenticar.' }
       }
 
-      localStorage.setItem('swnet:token', resultado.token)
+      salvarTokens(resultado.token, resultado.refreshToken)
       localStorage.setItem(CHAVE_STORAGE, JSON.stringify(resultado.usuario))
       setUsuario(resultado.usuario)
 
@@ -44,9 +45,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const sair = useCallback(() => {
-    localStorage.removeItem('swnet:token')
+    void logoutApi()
     localStorage.removeItem(CHAVE_STORAGE)
     setUsuario(null)
+  }, [])
+
+  // Refresh falhou no apiClient (sessão revogada/expirada): volta para o login
+  useEffect(() => {
+    const aoExpirar = () => {
+      limparTokens()
+      localStorage.removeItem(CHAVE_STORAGE)
+      setUsuario(null)
+    }
+    window.addEventListener(EVENTO_SESSAO_EXPIRADA, aoExpirar)
+    return () => window.removeEventListener(EVENTO_SESSAO_EXPIRADA, aoExpirar)
   }, [])
 
   const temPermissao = useCallback(

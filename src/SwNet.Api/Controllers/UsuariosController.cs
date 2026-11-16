@@ -21,7 +21,7 @@ public class UsuariosController : ControllerBase
         _usuarioRepositorio = usuarioRepositorio;
 
     [HttpGet]
-    [RequerPermissao("acessos-usuarios.visualizar")]
+    [RequerPermissao(Permissoes.AcessosUsuariosVisualizar)]
     public async Task<ActionResult<UsuarioObterDTO>> Listar()
     {
         var usuarios = await _usuarioRepositorio.ListarAsync();
@@ -40,6 +40,6 @@ public class UsuariosController : ControllerBase
         });
     }
 
-    // TODO: POST/PUT com [RequerPermissao("acessos-usuarios.editar")] — inserir/alterar
+    // TODO: POST/PUT com [RequerPermissao(Permissoes.AcessosUsuariosEditar)] — inserir/alterar
     // usuário, perfil e vínculo de plantas (UsuarioInserirDTO / UsuarioAlterarDTO já prontos)
 }
