@@ -1,9 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using Microsoft.Extensions.Configuration;
+using System.Text;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SwNet.Aplicacao.Autorizacao;
+using SwNet.Aplicacao.Configuracao;
 using SwNet.Aplicacao.Interfaces;
 using SwNet.Dominio.Entidades;
 
@@ -16,34 +18,48 @@ namespace SwNet.Infraestrutura.Servicos;
 /// </summary>
 public class TokenServico : ITokenServico
 {
-    private readonly IConfiguration _configuracao;
+    private readonly JwtOpcoes _opcoes;
+    private readonly TimeProvider _relogio;
+    private readonly SigningCredentials _credenciais;
 
-    public TokenServico(IConfiguration configuracao) => _configuracao = configuracao;
+    public TokenServico(IOptions<JwtOpcoes> opcoes, TimeProvider relogio)
+    {
+        _opcoes = opcoes.Value;
+        _relogio = relogio;
+        _credenciais = new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_opcoes.ChaveSecreta)),
+            SecurityAlgorithms.HmacSha256);
+    }
 
     public (string token, DateTime expiraEm) GerarToken(Usuario usuario, IEnumerable<string> permissoes, int plantaAtualId)
     {
-        var chave = _configuracao["Jwt:ChaveSecreta"]!;
-        var emissor = _configuracao["Jwt:Emissor"];
-        var audiencia = _configuracao["Jwt:Audiencia"];
-        var minutosExpiracao = int.Parse(_configuracao["Jwt:MinutosExpiracao"] ?? "60");
+        var agora = _relogio.GetUtcNow().UtcDateTime;
+        var expiraEm = agora.AddMinutes(_opcoes.MinutosExpiracao);
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, usuario.Id.ToString()),
-            new(JwtRegisteredClaimNames.UniqueName, usuario.Login),
-            new("nome", usuario.NomeCompleto),
-            new("plantaAtual", plantaAtualId.ToString())
+            new(ClaimsSwNet.UsuarioId, usuario.Id.ToString()),
+            new(ClaimsSwNet.Login, usuario.Login),
+            new(ClaimsSwNet.Nome, usuario.NomeCompleto),
+            new(ClaimsSwNet.PlantaAtual, plantaAtualId.ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N"))
         };
-        claims.AddRange(permissoes.Select(p => new Claim(RequerPermissaoAttribute.ClaimPermissao, p)));
+        claims.AddRange(permissoes.Select(p => new Claim(ClaimsSwNet.Permissao, p)));
 
-        var expiraEm = DateTime.UtcNow.AddMinutes(minutosExpiracao);
-        var credenciais = new SigningCredentials(
-            new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(chave)),
-            SecurityAlgorithms.HmacSha256);
+        var token = new JwtSecurityToken(
+            issuer: _opcoes.Emissor,
+            audience: _opcoes.Audiencia,
+            claims: claims,
+            notBefore: agora,
+            expires: expiraEm,
+            signingCredentials: _credenciais);
 
-        var token = new JwtSecurityToken(emissor, audiencia, claims, expires: expiraEm, signingCredentials: credenciais);
         return (new JwtSecurityTokenHandler().WriteToken(token), expiraEm);
     }
 
-    public string GerarRefreshToken() => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+    public string GerarRefreshToken() =>
+        Base64UrlEncoder.Encode(RandomNumberGenerator.GetBytes(64));
+
+    public string CalcularHash(string refreshToken) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(refreshToken)));
 }

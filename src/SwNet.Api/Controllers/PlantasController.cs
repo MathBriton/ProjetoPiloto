@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SwNet.Aplicacao.Autorizacao;
 using SwNet.Aplicacao.DTOs.Autenticacao;
 using SwNet.Infraestrutura.Contexto;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,10 @@ public class PlantasController : ControllerBase
     [HttpGet("minhas")]
     public async Task<ActionResult<List<PlantaDTO>>> MinhasPlantas()
     {
-        var usuarioId = int.Parse(User.FindFirst("sub")!.Value);
+        var usuarioId = User.ObterUsuarioId();
 
         var plantas = await _contexto.UsuarioPlantas
-            .Where(up => up.UsuarioId == usuarioId)
+            .Where(up => up.UsuarioId == usuarioId && up.Planta!.Ativa)
             .Select(up => new PlantaDTO { Id = up.Planta!.Id, Codigo = up.Planta.Codigo, Nome = up.Planta.Nome })
             .ToListAsync();
 

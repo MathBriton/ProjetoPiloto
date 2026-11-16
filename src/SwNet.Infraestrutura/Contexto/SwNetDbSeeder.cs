@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SwNet.Aplicacao.Autorizacao;
 using SwNet.Dominio.Entidades;
 
 namespace SwNet.Infraestrutura.Contexto;
@@ -10,46 +11,75 @@ namespace SwNet.Infraestrutura.Contexto;
 /// </summary>
 public static class SwNetDbSeeder
 {
+    public const string LoginAdmin = "admin";
+    public const string SenhaAdmin = "Admin@123";
+
+    /// <summary>Aplica as migrations e semeia os dados.</summary>
     public static async Task ExecutarAsync(SwNetDbContext contexto)
     {
         await contexto.Database.MigrateAsync();
+        await SemearAsync(contexto);
+    }
 
-        if (await contexto.Permissoes.AnyAsync()) return; // já semeado
-
-        var permissaoVisualizar = new Permissao { Chave = "acessos-usuarios.visualizar", Descricao = "Visualizar usuários", Modulo = "Acessos" };
-        var permissaoEditar = new Permissao { Chave = "acessos-usuarios.editar", Descricao = "Editar usuários", Modulo = "Acessos" };
-        contexto.Permissoes.AddRange(permissaoVisualizar, permissaoEditar);
-
-        var perfilAdmin = new Perfil { Nome = "Administrador", Descricao = "Acesso total ao sistema" };
-        contexto.Perfis.Add(perfilAdmin);
-
-        var plantaJf = new Planta { Codigo = "JF01", Nome = "Juiz de Fora" };
-        var plantaSp = new Planta { Codigo = "SP01", Nome = "São Paulo" };
-        contexto.Plantas.AddRange(plantaJf, plantaSp);
-
+    /// <summary>
+    /// Idempotente: sincroniza o catálogo de permissões (Permissoes.Todas) e
+    /// garante perfil Administrador com todas elas, plantas e usuário admin.
+    /// </summary>
+    public static async Task SemearAsync(SwNetDbContext contexto)
+    {
+        // 1) Catálogo de permissões
+        var existentes = await contexto.Permissoes.ToDictionaryAsync(p => p.Chave);
+        foreach (var (chave, descricao, modulo) in Permissoes.Todas)
+        {
+            if (!existentes.ContainsKey(chave))
+                contexto.Permissoes.Add(new Permissao { Chave = chave, Descricao = descricao, Modulo = modulo });
+        }
         await contexto.SaveChangesAsync();
 
-        contexto.PerfilPermissoes.AddRange(
-            new PerfilPermissao { PerfilId = perfilAdmin.Id, PermissaoId = permissaoVisualizar.Id },
-            new PerfilPermissao { PerfilId = perfilAdmin.Id, PermissaoId = permissaoEditar.Id }
-        );
+        // 2) Perfil Administrador com todas as permissões
+        var perfilAdmin = await contexto.Perfis.Include(p => p.PerfilPermissoes)
+            .FirstOrDefaultAsync(p => p.Nome == "Administrador");
+        if (perfilAdmin is null)
+        {
+            perfilAdmin = new Perfil { Nome = "Administrador", Descricao = "Acesso total ao sistema" };
+            contexto.Perfis.Add(perfilAdmin);
+            await contexto.SaveChangesAsync();
+        }
+
+        var idsNoPerfil = perfilAdmin.PerfilPermissoes.Select(pp => pp.PermissaoId).ToHashSet();
+        foreach (var permissao in await contexto.Permissoes.ToListAsync())
+        {
+            if (!idsNoPerfil.Contains(permissao.Id))
+                contexto.PerfilPermissoes.Add(new PerfilPermissao { PerfilId = perfilAdmin.Id, PermissaoId = permissao.Id });
+        }
+
+        // 3) Plantas
+        if (!await contexto.Plantas.AnyAsync())
+        {
+            contexto.Plantas.AddRange(
+                new Planta { Codigo = "JF01", Nome = "Juiz de Fora" },
+                new Planta { Codigo = "SP01", Nome = "São Paulo" });
+        }
+        await contexto.SaveChangesAsync();
+
+        // 4) Usuário admin
+        if (await contexto.Usuarios.AnyAsync(u => u.Login == LoginAdmin)) return;
 
         var usuarioAdmin = new Usuario
         {
-            Login = "admin",
+            Login = LoginAdmin,
             NomeCompleto = "Administrador (fictício)",
             Email = "admin@swnet.local",
-            SenhaHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+            SenhaHash = BCrypt.Net.BCrypt.HashPassword(SenhaAdmin),
             Ativo = true,
             PerfilId = perfilAdmin.Id
         };
         contexto.Usuarios.Add(usuarioAdmin);
         await contexto.SaveChangesAsync();
 
-        contexto.UsuarioPlantas.AddRange(
-            new UsuarioPlanta { UsuarioId = usuarioAdmin.Id, PlantaId = plantaJf.Id, Padrao = true },
-            new UsuarioPlanta { UsuarioId = usuarioAdmin.Id, PlantaId = plantaSp.Id, Padrao = false }
-        );
+        var plantas = await contexto.Plantas.OrderBy(p => p.Id).ToListAsync();
+        contexto.UsuarioPlantas.AddRange(plantas.Select((p, i) =>
+            new UsuarioPlanta { UsuarioId = usuarioAdmin.Id, PlantaId = p.Id, Padrao = i == 0 }));
 
         await contexto.SaveChangesAsync();
     }

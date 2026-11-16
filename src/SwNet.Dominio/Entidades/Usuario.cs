@@ -23,4 +23,32 @@ public class Usuario
 
     public ICollection<UsuarioPlanta> UsuarioPlantas { get; set; } = new List<UsuarioPlanta>();
     public ICollection<UsuarioPermissao> UsuarioPermissoes { get; set; } = new List<UsuarioPermissao>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
+    public bool EstaBloqueado(DateTime agora) => BloqueadoAte is not null && BloqueadoAte > agora;
+
+    /// <summary>Conta uma falha de login; ao atingir o limite, bloqueia. Retorna true se bloqueou agora.</summary>
+    public bool RegistrarFalhaLogin(DateTime agora, int maxTentativas, TimeSpan tempoBloqueio)
+    {
+        // Bloqueio anterior já venceu: recomeça a contagem
+        if (BloqueadoAte is not null && BloqueadoAte <= agora)
+        {
+            BloqueadoAte = null;
+            TentativasFalhas = 0;
+        }
+
+        TentativasFalhas++;
+        if (TentativasFalhas < maxTentativas) return false;
+
+        BloqueadoAte = agora.Add(tempoBloqueio);
+        TentativasFalhas = 0;
+        return true;
+    }
+
+    public void RegistrarLoginSucedido(DateTime agora)
+    {
+        TentativasFalhas = 0;
+        BloqueadoAte = null;
+        UltimoLoginEm = agora;
+    }
 }

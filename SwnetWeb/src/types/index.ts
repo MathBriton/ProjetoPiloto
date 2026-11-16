@@ -9,6 +9,7 @@ export interface UsuarioLogado {
   login: string
   nomeCompleto: string
   perfil: string
+  senhaProvisoria?: boolean
   permissoes: string[]
   plantas: Planta[]
   plantaAtualId: number
